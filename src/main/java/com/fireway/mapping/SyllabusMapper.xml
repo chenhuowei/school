@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.SyllabusMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Syllabus" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="TEACHER_NAME" property="teacherName" jdbcType="VARCHAR" />
+    <result column="T_NUMBER" property="teacherNum" jdbcType="VARCHAR" />
+    <result column="LOCATION_ID" property="locationId" jdbcType="VARCHAR" />
+    <result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR" />
+    <result column="CLASS_TIME" property="classTime" jdbcType="VARCHAR" />
+    <result column="CLASS_WEEK" property="classWeek" jdbcType="VARCHAR" />
+    <result column="SUBJECT_CODE" property="subjectCode" jdbcType="VARCHAR" />
+    <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+    <result column="CLASS_ID" property="classId" jdbcType="VARCHAR" />
+    <result column="ACADEMY_NAME" property="academyName" jdbcType="VARCHAR" />
+    <result column="CLASS_NAME" property="className" jdbcType="VARCHAR" />
+    <result column="SCHOOL_YEAR" property="schoolYear" jdbcType="VARCHAR" />
+    <result column="TERM" property="term" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, TEACHER_NAME, 
+    T_NUMBER, LOCATION_ID, LOCATION_NAME, CLASS_TIME, CLASS_WEEK, SUBJECT_CODE, SUBJECT_NAME, 
+    CLASS_ID, ACADEMY_NAME, CLASS_NAME, SCHOOL_YEAR, TERM
+  </sql>
+  
+  
+   <!-- 自动编排课程，同一个时间点（星期几的某个上课区段） 确保 教师，班级，地点 唯一性 -->
+   <select id="countByLayoutParams" resultType="java.lang.Integer" parameterType="com.fireway.request.dto.AutoLayoutParams" >
+    select
+    count(ID)
+    from sys_课程排版
+    where 
+	   	(	SCHOOL_YEAR = #{schoolYear}
+	    	and TERM = #{term}
+	    	and CLASS_WEEK = #{classWeek}
+	    	and CLASS_TIME = #{classTime}
+	    ) 
+	    and
+	   	(	
+     		CLASS_ID = #{classId}
+	    
+     		or T_NUMBER = #{teacherNum}
+	   
+     		or LOCATION_ID = #{locationId}
+	    ) 
+     	
+	  
+   
+  </select>
+ 
+   <!-- 确保教师一天最多的课程次数 -->
+   <select id="countTeacherLessionOfDay" resultType="java.lang.Integer" parameterType="com.fireway.request.dto.AutoLayoutParams" >
+    select
+    count(ID)
+    from sys_课程排版 as a
+    where 
+     T_NUMBER = #{teacherNum} and CLASS_WEEK = #{classWeek}
+	    and SCHOOL_YEAR = #{schoolYear}
+	    	and TERM = #{term}	
+   
+  </select>
+ 
+  <!-- 确保每个班级一天最多的课程次数 -->
+   <select id="countClassLessionOfDay" resultType="java.lang.Integer" parameterType="com.fireway.request.dto.AutoLayoutParams" >
+    select
+    count(ID)
+    from sys_课程排版
+    where 
+	CLASS_ID = #{classId}
+    	and CLASS_WEEK = #{classWeek}
+    and SCHOOL_YEAR = #{schoolYear}
+	    	and TERM = #{term}
+   
+  </select>
+ 
+  
+  <!-- 确保班级的一天中同一科目的次数为1 -->
+   <select id="countClassSubjectOfDay" resultType="java.lang.Integer" parameterType="com.fireway.request.dto.AutoLayoutParams" >
+    select
+    count(ID)
+    from sys_课程排版
+    where 
+   	 SUBJECT_CODE = #{subjectCode}
+     and CLASS_ID = #{classId}
+     and CLASS_WEEK = #{classWeek}
+     and SCHOOL_YEAR = #{schoolYear}
+	    	and TERM = #{term}
+  </select>
+  
+  
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.SyllabusExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_课程排版
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_课程排版
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_课程排版
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.SyllabusExample" >
+    delete from sys_课程排版
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Syllabus" >
+    insert into sys_课程排版 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, TEACHER_NAME, T_NUMBER, 
+      LOCATION_ID, LOCATION_NAME, CLASS_TIME, 
+      CLASS_WEEK, SUBJECT_CODE, SUBJECT_NAME, 
+      CLASS_ID, ACADEMY_NAME, CLASS_NAME, 
+      SCHOOL_YEAR, TERM)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{teacherName,jdbcType=VARCHAR}, #{teacherNum,jdbcType=VARCHAR}, 
+      #{locationId,jdbcType=VARCHAR}, #{locationName,jdbcType=VARCHAR}, #{classTime,jdbcType=VARCHAR}, 
+      #{classWeek,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
+      #{classId,jdbcType=VARCHAR}, #{academyName,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
+      #{schoolYear,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Syllabus" >
+    insert into sys_课程排版
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="teacherName != null" >
+        TEACHER_NAME,
+      </if>
+      <if test="teacherNum != null" >
+        T_NUMBER,
+      </if>
+      <if test="locationId != null" >
+        LOCATION_ID,
+      </if>
+      <if test="locationName != null" >
+        LOCATION_NAME,
+      </if>
+      <if test="classTime != null" >
+        CLASS_TIME,
+      </if>
+      <if test="classWeek != null" >
+        CLASS_WEEK,
+      </if>
+      <if test="subjectCode != null" >
+        SUBJECT_CODE,
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME,
+      </if>
+      <if test="classId != null" >
+        CLASS_ID,
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME,
+      </if>
+      <if test="className != null" >
+        CLASS_NAME,
+      </if>
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR,
+      </if>
+      <if test="term != null" >
+        TERM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherName != null" >
+        #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="locationId != null" >
+        #{locationId,jdbcType=VARCHAR},
+      </if>
+      <if test="locationName != null" >
+        #{locationName,jdbcType=VARCHAR},
+      </if>
+      <if test="classTime != null" >
+        #{classTime,jdbcType=VARCHAR},
+      </if>
+      <if test="classWeek != null" >
+        #{classWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null" >
+        #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+        #{academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolYear != null" >
+        #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.SyllabusExample" resultType="java.lang.Integer" >
+    select count(*) from sys_课程排版
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_课程排版
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherName != null" >
+        TEACHER_NAME = #{record.teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherNum != null" >
+        T_NUMBER = #{record.teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.locationId != null" >
+        LOCATION_ID = #{record.locationId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.locationName != null" >
+        LOCATION_NAME = #{record.locationName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classTime != null" >
+        CLASS_TIME = #{record.classTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classWeek != null" >
+        CLASS_WEEK = #{record.classWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectCode != null" >
+        SUBJECT_CODE = #{record.subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectName != null" >
+        SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classId != null" >
+        CLASS_ID = #{record.classId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academyName != null" >
+        ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.className != null" >
+        CLASS_NAME = #{record.className,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolYear != null" >
+        SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.term != null" >
+        TERM = #{record.term,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_课程排版
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      TEACHER_NAME = #{record.teacherName,jdbcType=VARCHAR},
+      T_NUMBER = #{record.teacherNum,jdbcType=VARCHAR},
+      LOCATION_ID = #{record.locationId,jdbcType=VARCHAR},
+      LOCATION_NAME = #{record.locationName,jdbcType=VARCHAR},
+      CLASS_TIME = #{record.classTime,jdbcType=VARCHAR},
+      CLASS_WEEK = #{record.classWeek,jdbcType=VARCHAR},
+      SUBJECT_CODE = #{record.subjectCode,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      CLASS_ID = #{record.classId,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      CLASS_NAME = #{record.className,jdbcType=VARCHAR},
+      SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      TERM = #{record.term,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Syllabus" >
+    update sys_课程排版
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherName != null" >
+        TEACHER_NAME = #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        T_NUMBER = #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="locationId != null" >
+        LOCATION_ID = #{locationId,jdbcType=VARCHAR},
+      </if>
+      <if test="locationName != null" >
+        LOCATION_NAME = #{locationName,jdbcType=VARCHAR},
+      </if>
+      <if test="classTime != null" >
+        CLASS_TIME = #{classTime,jdbcType=VARCHAR},
+      </if>
+      <if test="classWeek != null" >
+        CLASS_WEEK = #{classWeek,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null" >
+        SUBJECT_CODE = #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="classId != null" >
+        CLASS_ID = #{classId,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        CLASS_NAME = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        TERM = #{term,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Syllabus" >
+    update sys_课程排版
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      TEACHER_NAME = #{teacherName,jdbcType=VARCHAR},
+      T_NUMBER = #{teacherNum,jdbcType=VARCHAR},
+      LOCATION_ID = #{locationId,jdbcType=VARCHAR},
+      LOCATION_NAME = #{locationName,jdbcType=VARCHAR},
+      CLASS_TIME = #{classTime,jdbcType=VARCHAR},
+      CLASS_WEEK = #{classWeek,jdbcType=VARCHAR},
+      SUBJECT_CODE = #{subjectCode,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      CLASS_ID = #{classId,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      CLASS_NAME = #{className,jdbcType=VARCHAR},
+      SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      TERM = #{term,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

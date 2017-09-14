@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.TeacherMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Teacher" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="T_NUMBER" property="teacherNum" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="PASSWORD2" property="password2" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="BIT" />
+    <result column="AGE" property="age" jdbcType="INTEGER" />
+    <result column="BIRTH" property="birth" jdbcType="VARCHAR" />
+    <result column="NATIONAL" property="national" jdbcType="VARCHAR" />
+    <result column="NATIVE_PLACE" property="nativePlace" jdbcType="VARCHAR" />
+    <result column="ACADEMIC_DEGREE" property="academicDegree" jdbcType="VARCHAR" />
+    <result column="SCHOOL_OF_GRADUATION" property="schoolOfGraduation" jdbcType="VARCHAR" />
+    <result column="JOIN_DATE" property="joinDate" jdbcType="VARCHAR" />
+    <result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="HOME_ADDRESS" property="homeAddress" jdbcType="VARCHAR" />
+    <result column="HOME_TEL" property="homeTel" jdbcType="VARCHAR" />
+    <result column="HEAD_IMAGE" property="headImage" jdbcType="VARCHAR" />
+    <result column="ACADEMY_NAME" property="academyName" jdbcType="VARCHAR" />
+    <result column="ACADEMY_ID" property="academyId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, T_NUMBER, PASSWORD, 
+    PASSWORD2, NAME, SEX, AGE, BIRTH, NATIONAL, NATIVE_PLACE, ACADEMIC_DEGREE, SCHOOL_OF_GRADUATION, 
+    JOIN_DATE, ID_CARD, MOBILE, EMAIL, HOME_ADDRESS, HOME_TEL, HEAD_IMAGE, ACADEMY_NAME, 
+    ACADEMY_ID
+  </sql>
+  
+  
+  
+   <select id="selectBySearchParam" resultMap="BaseResultMap" parameterType="com.fireway.request.dto.SearchParam">
+   
+    select
+    s.ID,s.NAME,s.ID_CARD,s.SEX,s.T_NUMBER,s.STATUS,s.BIRTH,s.ACADEMY_NAME,s.EMAIL,s.MOBILE,s.ACADEMIC_DEGREE
+    from sys_教工信息 as s
+	    	where 1=1 
+	    
+	    <if test="academyId != null and academyId != ''">
+	    	and s.ACADEMY_ID = #{academyId}
+	    </if>
+	    <if test="name != null and name != ''">
+	    <bind name="p_name" value="'%' + _parameter.name + '%'" />
+	    	and s.NAME like #{p_name}
+	    </if>
+	    <if test="sex != null">
+	    	and s.SEX = #{sex}
+	    </if>
+	    <if test="status != null">
+	    	and s.STATUS = #{status}
+	    </if>
+	    <if test="num != null and num != ''">
+	    	and s.T_NUMBER = #{num}
+	    </if>
+	    <if test="nativePlace != null and nativePlace != ''">
+	    <bind name="p_name" value="'%' + _parameter.name + '%'" />
+	    	and s.NATIVE_PLACE like #{p_nativePlace}
+	    </if>
+	    <if test="homeAddress != null and homeAddress != ''">
+   		<bind name="p_homeAddress" value="'%' + _parameter.homeAddress + '%'" />
+	    	and s.HOME_ADDRESS like #{p_homeAddress}
+	    </if>
+	    <if test="mobile != null and mobile != ''">
+   		<bind name="P_mobile" value="'%' + _parameter.mobile + '%'" />
+	    	and s.MOBILE like #{p_mobile}
+	    </if>
+	    <if test="tel != null and tel != ''">
+   		<bind name="p_homeTel" value="'%' + _parameter.tel + '%'" />
+	    	and s.HOME_TEL like #{p_homeTel}
+	    </if>
+	    <if test="schoolOfGraduation != null and schoolOfGraduation != ''">
+   		<bind name="p_schoolOfGraduation" value="'%' + _parameter.schoolOfGraduation + '%'" />
+	    	and s.SCHOOL_OF_GRADUATION like #{p_schoolOfGraduation}
+	    </if>
+	    <if test="startBirth != null and startBirth != ''">
+	    	and s.BIRTH &gt;= #{startBirth}
+	    </if>
+	    <if test="endBirth != null and endBirth != ''">
+	    	and s.BIRTH &lt;= #{endBirth}
+	    </if>
+	    <if test="startJoinDate != null and startJoinDate != ''">
+	    	and s.JOIN_DATE &gt;= #{startJoinDate}
+	    </if>
+	    <if test="endJoinDate != null and endJoinDate != ''">
+	    	and s.JOIN_DATE &lt;= #{endJoinDate}
+	    </if>
+	    <if test="startCreateTime != null and startCreateTime != ''">
+	    	and s.CREATE_TIME &gt;= #{startCreateTime}
+	    </if>
+	    <if test="endCreateTime != null and endCreateTime != ''">
+	    	and s.CREATE_TIME &lt;= #{endCreateTime}
+	    </if>
+	    <if test="startUpdateTime != null and startUpdateTime != ''">
+	    	and s.UPDATE_TIME &gt;= #{startBirth}
+	    </if>
+	    <if test="endUpdateTime != null and endUpdateTime != ''">
+	    	and s.UPDATE_TIME &lt;= #{endUpdateTime}
+	    </if>
+	    <if test="keyWord != null and keyWord != ''">
+   		<bind name="p_keyWord" value="'%' + _parameter.keyWord + '%'" />
+	    	and s.NAME like #{p_keyWord} 
+	    	or s.NATIVE_PLACE like #{p_keyWord} 
+	    	or s.HOME_ADDRESS like #{p_keyWord} 
+	    	or s.MOBILE like #{p_keyWord} 
+	    	or s.HOME_TEL like #{p_keyWord} 
+	    	or s.SCHOOL_OF_GRADUATION like #{p_keyWord} 
+	    	or s.ACADEMY_NAME like #{p_keyWord} 
+	    	or s.ACADEMIC_DEGREE like #{p_keyWord} 
+	    </if>
+	    
+	    
+	    
+	    
+	    
+	    
+  </select>
+  
+  <select id="findIdAndNameByAcademy" resultType="java.util.Map">
+  	select t.ID as value,t.NAME as name from
+  	sys_教工信息 as t 
+  	where t.ACADEMY_ID = #{academyId}
+  
+  </select>
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.TeacherExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_教工信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_教工信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_教工信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.TeacherExample" >
+    delete from sys_教工信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Teacher" >
+    insert into sys_教工信息 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, T_NUMBER, PASSWORD, 
+      PASSWORD2, NAME, SEX, AGE, 
+      BIRTH, NATIONAL, NATIVE_PLACE, 
+      ACADEMIC_DEGREE, SCHOOL_OF_GRADUATION, JOIN_DATE, 
+      ID_CARD, MOBILE, EMAIL, 
+      HOME_ADDRESS, HOME_TEL, HEAD_IMAGE, 
+      ACADEMY_NAME, ACADEMY_ID)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{teacherNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{password2,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, #{age,jdbcType=INTEGER}, 
+      #{birth,jdbcType=VARCHAR}, #{national,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, 
+      #{academicDegree,jdbcType=VARCHAR}, #{schoolOfGraduation,jdbcType=VARCHAR}, #{joinDate,jdbcType=VARCHAR}, 
+      #{idCard,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{homeAddress,jdbcType=VARCHAR}, #{homeTel,jdbcType=VARCHAR}, #{headImage,jdbcType=VARCHAR}, 
+      #{academyName,jdbcType=VARCHAR}, #{academyId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Teacher" >
+    insert into sys_教工信息
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="teacherNum != null" >
+        T_NUMBER,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="password2 != null" >
+        PASSWORD2,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="birth != null" >
+        BIRTH,
+      </if>
+      <if test="national != null" >
+        NATIONAL,
+      </if>
+      <if test="nativePlace != null" >
+        NATIVE_PLACE,
+      </if>
+      <if test="academicDegree != null" >
+        ACADEMIC_DEGREE,
+      </if>
+      <if test="schoolOfGraduation != null" >
+        SCHOOL_OF_GRADUATION,
+      </if>
+      <if test="joinDate != null" >
+        JOIN_DATE,
+      </if>
+      <if test="idCard != null" >
+        ID_CARD,
+      </if>
+      <if test="mobile != null" >
+        MOBILE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="homeAddress != null" >
+        HOME_ADDRESS,
+      </if>
+      <if test="homeTel != null" >
+        HOME_TEL,
+      </if>
+      <if test="headImage != null" >
+        HEAD_IMAGE,
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME,
+      </if>
+      <if test="academyId != null" >
+        ACADEMY_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="password2 != null" >
+        #{password2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null" >
+        #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="national != null" >
+        #{national,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="academicDegree != null" >
+        #{academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolOfGraduation != null" >
+        #{schoolOfGraduation,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="homeAddress != null" >
+        #{homeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null" >
+        #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+        #{academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="academyId != null" >
+        #{academyId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.TeacherExample" resultType="java.lang.Integer" >
+    select count(*) from sys_教工信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_教工信息
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherNum != null" >
+        T_NUMBER = #{record.teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        PASSWORD = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password2 != null" >
+        PASSWORD2 = #{record.password2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        SEX = #{record.sex,jdbcType=BIT},
+      </if>
+      <if test="record.age != null" >
+        AGE = #{record.age,jdbcType=INTEGER},
+      </if>
+      <if test="record.birth != null" >
+        BIRTH = #{record.birth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.national != null" >
+        NATIONAL = #{record.national,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nativePlace != null" >
+        NATIVE_PLACE = #{record.nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academicDegree != null" >
+        ACADEMIC_DEGREE = #{record.academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolOfGraduation != null" >
+        SCHOOL_OF_GRADUATION = #{record.schoolOfGraduation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinDate != null" >
+        JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idCard != null" >
+        ID_CARD = #{record.idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.homeAddress != null" >
+        HOME_ADDRESS = #{record.homeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.homeTel != null" >
+        HOME_TEL = #{record.homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headImage != null" >
+        HEAD_IMAGE = #{record.headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academyName != null" >
+        ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academyId != null" >
+        ACADEMY_ID = #{record.academyId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_教工信息
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      T_NUMBER = #{record.teacherNum,jdbcType=VARCHAR},
+      PASSWORD = #{record.password,jdbcType=VARCHAR},
+      PASSWORD2 = #{record.password2,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      SEX = #{record.sex,jdbcType=BIT},
+      AGE = #{record.age,jdbcType=INTEGER},
+      BIRTH = #{record.birth,jdbcType=VARCHAR},
+      NATIONAL = #{record.national,jdbcType=VARCHAR},
+      NATIVE_PLACE = #{record.nativePlace,jdbcType=VARCHAR},
+      ACADEMIC_DEGREE = #{record.academicDegree,jdbcType=VARCHAR},
+      SCHOOL_OF_GRADUATION = #{record.schoolOfGraduation,jdbcType=VARCHAR},
+      JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR},
+      ID_CARD = #{record.idCard,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      HOME_ADDRESS = #{record.homeAddress,jdbcType=VARCHAR},
+      HOME_TEL = #{record.homeTel,jdbcType=VARCHAR},
+      HEAD_IMAGE = #{record.headImage,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      ACADEMY_ID = #{record.academyId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Teacher" >
+    update sys_教工信息
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        T_NUMBER = #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="password2 != null" >
+        PASSWORD2 = #{password2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=BIT},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null" >
+        BIRTH = #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="national != null" >
+        NATIONAL = #{national,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        NATIVE_PLACE = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="academicDegree != null" >
+        ACADEMIC_DEGREE = #{academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolOfGraduation != null" >
+        SCHOOL_OF_GRADUATION = #{schoolOfGraduation,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        ID_CARD = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="homeAddress != null" >
+        HOME_ADDRESS = #{homeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        HOME_TEL = #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null" >
+        HEAD_IMAGE = #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="academyId != null" >
+        ACADEMY_ID = #{academyId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Teacher" >
+    update sys_教工信息
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      T_NUMBER = #{teacherNum,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      PASSWORD2 = #{password2,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=BIT},
+      AGE = #{age,jdbcType=INTEGER},
+      BIRTH = #{birth,jdbcType=VARCHAR},
+      NATIONAL = #{national,jdbcType=VARCHAR},
+      NATIVE_PLACE = #{nativePlace,jdbcType=VARCHAR},
+      ACADEMIC_DEGREE = #{academicDegree,jdbcType=VARCHAR},
+      SCHOOL_OF_GRADUATION = #{schoolOfGraduation,jdbcType=VARCHAR},
+      JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      ID_CARD = #{idCard,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      HOME_ADDRESS = #{homeAddress,jdbcType=VARCHAR},
+      HOME_TEL = #{homeTel,jdbcType=VARCHAR},
+      HEAD_IMAGE = #{headImage,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      ACADEMY_ID = #{academyId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

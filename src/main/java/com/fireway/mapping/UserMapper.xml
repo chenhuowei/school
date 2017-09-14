@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.User" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="U_NUMBER" property="userNum" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="PASSWORD2" property="password2" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="BIT" />
+    <result column="AGE" property="age" jdbcType="INTEGER" />
+    <result column="BIRTH" property="birth" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="HOME_TEL" property="homeTel" jdbcType="VARCHAR" />
+    <result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="JOIN_DATE" property="joinDate" jdbcType="VARCHAR" />
+    <result column="REGIS_TIME" property="regisTime" jdbcType="VARCHAR" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="VARCHAR" />
+    <result column="LOGIN_IP" property="loginIp" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, U_NUMBER, PASSWORD, 
+    PASSWORD2, NAME, SEX, AGE, BIRTH, ADDRESS, MOBILE, HOME_TEL, ID_CARD, EMAIL, JOIN_DATE, 
+    REGIS_TIME, LAST_LOGIN_TIME, LOGIN_IP
+  </sql>
+  <sql id="Grid_Column_List">
+    ID, STATUS, REMARK, U_NUMBER,EMAIL,
+    NAME, SEX, BIRTH, ADDRESS, MOBILE,  ID_CARD
+    
+  </sql>
+  
+  
+  
+  <select id="selectBySearchParam" resultMap="BaseResultMap" parameterType="com.fireway.request.dto.SearchParam">
+   
+    select
+    s.ID,s.NAME,s.ID_CARD,s.SEX,s.U_NUMBER,s.STATUS,s.BIRTH,s.EMAIL,s.MOBILE,s.ADDRESS
+    from sys_系统用户 as s
+	    	where 1=1 
+
+	    <if test="name != null and name != ''">
+	    <bind name="p_name" value="'%' + _parameter.name + '%'" />
+	    	and s.NAME like #{p_name}
+	    </if>
+	    <if test="sex != null">
+	    	and s.SEX = #{sex}
+	    </if>
+	    <if test="status != null">
+	    	and s.STATUS = #{status}
+	    </if>
+	    <if test="num != null and num != ''">
+	    	and s.U_NUMBER = #{num}
+	    </if>
+	    <if test="address != null and address != ''">
+   		<bind name="p_address" value="'%' + _parameter.address + '%'" />
+	    	and s.ADDRESS like #{p_address}
+	    </if>
+	    <if test="mobile != null and mobile != ''">
+   		<bind name="P_mobile" value="'%' + _parameter.mobile + '%'" />
+	    	and s.MOBILE like #{p_mobile}
+	    </if>
+	    <if test="tel != null and tel != ''">
+   		<bind name="p_homeTel" value="'%' + _parameter.tel + '%'" />
+	    	and s.HOME_TEL like #{p_homeTel}
+	    </if>
+	    
+	    <if test="startBirth != null and startBirth != ''">
+	    	and s.BIRTH &gt;= #{startBirth}
+	    </if>
+	    <if test="endBirth != null and endBirth != ''">
+	    	and s.BIRTH &lt;= #{endBirth}
+	    </if>
+	    <if test="startJoinDate != null and startJoinDate != ''">
+	    	and s.JOIN_DATE &gt;= #{startJoinDate}
+	    </if>
+	    <if test="endJoinDate != null and endJoinDate != ''">
+	    	and s.JOIN_DATE &lt;= #{endJoinDate}
+	    </if>
+	    <if test="startCreateTime != null and startCreateTime != ''">
+	    	and s.CREATE_TIME &gt;= #{startCreateTime}
+	    </if>
+	    <if test="endCreateTime != null and endCreateTime != ''">
+	    	and s.CREATE_TIME &lt;= #{endCreateTime}
+	    </if>
+	    <if test="startUpdateTime != null and startUpdateTime != ''">
+	    	and s.UPDATE_TIME &gt;= #{startBirth}
+	    </if>
+	    <if test="endUpdateTime != null and endUpdateTime != ''">
+	    	and s.UPDATE_TIME &lt;= #{endUpdateTime}
+	    </if>
+	    <if test="keyWord != null and keyWord != ''">
+   		<bind name="p_keyWord" value="'%' + _parameter.keyWord + '%'" />
+	    	and s.NAME like #{p_keyWord} 
+	    	or s.ADDRESS like #{p_keyWord} 
+	    	or s.MOBILE like #{p_keyWord} 
+	    	or s.HOME_TEL like #{p_keyWord} 
+	    	or s.U_NUMBER like #{p_keyWord} 
+	    	or s.ID_CARD like #{p_keyWord} 
+	    </if>
+	   
+	    
+  </select>
+  
+  
+  
+  <select id="selectByPage" parameterType="com.fireway.entity.UserExample" resultMap="BaseResultMap">
+  	 select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Grid_Column_List" />
+    from sys_系统用户
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.UserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_系统用户
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_系统用户
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_系统用户
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.UserExample" >
+    delete from sys_系统用户
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.User" >
+    insert into sys_系统用户 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, U_NUMBER, PASSWORD, 
+      PASSWORD2, NAME, SEX, AGE, 
+      BIRTH, ADDRESS, MOBILE, 
+      HOME_TEL, ID_CARD, EMAIL, 
+      JOIN_DATE, REGIS_TIME, LAST_LOGIN_TIME, 
+      LOGIN_IP)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{userNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{password2,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=BIT}, #{age,jdbcType=INTEGER}, 
+      #{birth,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{homeTel,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{joinDate,jdbcType=VARCHAR}, #{regisTime,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=VARCHAR}, 
+      #{loginIp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.User" >
+    insert into sys_系统用户
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="userNum != null" >
+        U_NUMBER,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="password2 != null" >
+        PASSWORD2,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="age != null" >
+        AGE,
+      </if>
+      <if test="birth != null" >
+        BIRTH,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="mobile != null" >
+        MOBILE,
+      </if>
+      <if test="homeTel != null" >
+        HOME_TEL,
+      </if>
+      <if test="idCard != null" >
+        ID_CARD,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="joinDate != null" >
+        JOIN_DATE,
+      </if>
+      <if test="regisTime != null" >
+        REGIS_TIME,
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME,
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="password2 != null" >
+        #{password2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=BIT},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null" >
+        #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="regisTime != null" >
+        #{regisTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.UserExample" resultType="java.lang.Integer" >
+    select count(*) from sys_系统用户
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_系统用户
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userNum != null" >
+        U_NUMBER = #{record.userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        PASSWORD = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password2 != null" >
+        PASSWORD2 = #{record.password2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        SEX = #{record.sex,jdbcType=BIT},
+      </if>
+      <if test="record.age != null" >
+        AGE = #{record.age,jdbcType=INTEGER},
+      </if>
+      <if test="record.birth != null" >
+        BIRTH = #{record.birth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        ADDRESS = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.homeTel != null" >
+        HOME_TEL = #{record.homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idCard != null" >
+        ID_CARD = #{record.idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        EMAIL = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinDate != null" >
+        JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regisTime != null" >
+        REGIS_TIME = #{record.regisTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{record.lastLoginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginIp != null" >
+        LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_系统用户
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      U_NUMBER = #{record.userNum,jdbcType=VARCHAR},
+      PASSWORD = #{record.password,jdbcType=VARCHAR},
+      PASSWORD2 = #{record.password2,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      SEX = #{record.sex,jdbcType=BIT},
+      AGE = #{record.age,jdbcType=INTEGER},
+      BIRTH = #{record.birth,jdbcType=VARCHAR},
+      ADDRESS = #{record.address,jdbcType=VARCHAR},
+      MOBILE = #{record.mobile,jdbcType=VARCHAR},
+      HOME_TEL = #{record.homeTel,jdbcType=VARCHAR},
+      ID_CARD = #{record.idCard,jdbcType=VARCHAR},
+      EMAIL = #{record.email,jdbcType=VARCHAR},
+      JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR},
+      REGIS_TIME = #{record.regisTime,jdbcType=VARCHAR},
+      LAST_LOGIN_TIME = #{record.lastLoginTime,jdbcType=VARCHAR},
+      LOGIN_IP = #{record.loginIp,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.User" >
+    update sys_系统用户
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        U_NUMBER = #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="password2 != null" >
+        PASSWORD2 = #{password2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=BIT},
+      </if>
+      <if test="age != null" >
+        AGE = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null" >
+        BIRTH = #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        HOME_TEL = #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        ID_CARD = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="regisTime != null" >
+        REGIS_TIME = #{regisTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.User" >
+    update sys_系统用户
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      U_NUMBER = #{userNum,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      PASSWORD2 = #{password2,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=BIT},
+      AGE = #{age,jdbcType=INTEGER},
+      BIRTH = #{birth,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      HOME_TEL = #{homeTel,jdbcType=VARCHAR},
+      ID_CARD = #{idCard,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      REGIS_TIME = #{regisTime,jdbcType=VARCHAR},
+      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=VARCHAR},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

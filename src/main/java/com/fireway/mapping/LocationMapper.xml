@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.LocationMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Location" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="BUILDING" property="building" jdbcType="VARCHAR" />
+    <result column="ROOM_NUMBER" property="roomNum" jdbcType="VARCHAR" />
+    <result column="IS_OFFIC" property="isOffic" jdbcType="BIT" />
+    <result column="CAPACITY" property="capacity" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, BUILDING, ROOM_NUMBER, 
+    IS_OFFIC, CAPACITY
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.LocationExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_教学地点
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_教学地点
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_教学地点
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.LocationExample" >
+    delete from sys_教学地点
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Location" >
+    insert into sys_教学地点 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, BUILDING, ROOM_NUMBER, 
+      IS_OFFIC, CAPACITY)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{building,jdbcType=VARCHAR}, #{roomNum,jdbcType=VARCHAR}, 
+      #{isOffic,jdbcType=BIT}, #{capacity,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Location" >
+    insert into sys_教学地点
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="building != null" >
+        BUILDING,
+      </if>
+      <if test="roomNum != null" >
+        ROOM_NUMBER,
+      </if>
+      <if test="isOffic != null" >
+        IS_OFFIC,
+      </if>
+      <if test="capacity != null" >
+        CAPACITY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="building != null" >
+        #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNum != null" >
+        #{roomNum,jdbcType=VARCHAR},
+      </if>
+      <if test="isOffic != null" >
+        #{isOffic,jdbcType=BIT},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.LocationExample" resultType="java.lang.Integer" >
+    select count(*) from sys_教学地点
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_教学地点
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.building != null" >
+        BUILDING = #{record.building,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomNum != null" >
+        ROOM_NUMBER = #{record.roomNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isOffic != null" >
+        IS_OFFIC = #{record.isOffic,jdbcType=BIT},
+      </if>
+      <if test="record.capacity != null" >
+        CAPACITY = #{record.capacity,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_教学地点
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      BUILDING = #{record.building,jdbcType=VARCHAR},
+      ROOM_NUMBER = #{record.roomNum,jdbcType=VARCHAR},
+      IS_OFFIC = #{record.isOffic,jdbcType=BIT},
+      CAPACITY = #{record.capacity,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Location" >
+    update sys_教学地点
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="building != null" >
+        BUILDING = #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNum != null" >
+        ROOM_NUMBER = #{roomNum,jdbcType=VARCHAR},
+      </if>
+      <if test="isOffic != null" >
+        IS_OFFIC = #{isOffic,jdbcType=BIT},
+      </if>
+      <if test="capacity != null" >
+        CAPACITY = #{capacity,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Location" >
+    update sys_教学地点
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      BUILDING = #{building,jdbcType=VARCHAR},
+      ROOM_NUMBER = #{roomNum,jdbcType=VARCHAR},
+      IS_OFFIC = #{isOffic,jdbcType=BIT},
+      CAPACITY = #{capacity,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

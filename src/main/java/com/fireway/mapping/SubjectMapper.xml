@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.SubjectMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Subject" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="CATEGORY" property="category" jdbcType="VARCHAR" />
+    <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+    <result column="INFO" property="info" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="VOLUMES" property="volumes" jdbcType="VARCHAR" />
+    <result column="CREDITS" property="credits" jdbcType="DOUBLE" />
+    <result column="APPLICATION" property="application" jdbcType="VARCHAR" />
+    <result column="IS_REQUEST" property="isRequest" jdbcType="BIT" />
+    <result column="IS_PUBLICE" property="isPublic" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, CODE, CATEGORY, 
+    SUBJECT_NAME, INFO, VERSION, VOLUMES, CREDITS, APPLICATION, IS_REQUEST, IS_PUBLICE
+  </sql>
+  
+  <select id="findIdAndNameByCategory" resultType="java.util.Map">
+  
+  	select s.ID as value,s.SUBJECT_NAME as name from
+  	sys_专业科目 as s
+  	where s.CATEGORY = #{category}
+  </select>
+  
+  
+  
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.SubjectExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_专业科目
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_专业科目
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_专业科目
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.SubjectExample" >
+    delete from sys_专业科目
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Subject" >
+    insert into sys_专业科目 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, CODE, CATEGORY, 
+      SUBJECT_NAME, INFO, VERSION, 
+      VOLUMES, CREDITS, APPLICATION, 
+      IS_REQUEST, IS_PUBLICE)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, 
+      #{subjectName,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
+      #{volumes,jdbcType=VARCHAR}, #{credits,jdbcType=DOUBLE}, #{application,jdbcType=VARCHAR}, 
+      #{isRequest,jdbcType=BIT}, #{isPublic,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Subject" >
+    insert into sys_专业科目
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="category != null" >
+        CATEGORY,
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME,
+      </if>
+      <if test="info != null" >
+        INFO,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="volumes != null" >
+        VOLUMES,
+      </if>
+      <if test="credits != null" >
+        CREDITS,
+      </if>
+      <if test="application != null" >
+        APPLICATION,
+      </if>
+      <if test="isRequest != null" >
+        IS_REQUEST,
+      </if>
+      <if test="isPublic != null" >
+        IS_PUBLICE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="volumes != null" >
+        #{volumes,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null" >
+        #{credits,jdbcType=DOUBLE},
+      </if>
+      <if test="application != null" >
+        #{application,jdbcType=VARCHAR},
+      </if>
+      <if test="isRequest != null" >
+        #{isRequest,jdbcType=BIT},
+      </if>
+      <if test="isPublic != null" >
+        #{isPublic,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.SubjectExample" resultType="java.lang.Integer" >
+    select count(*) from sys_专业科目
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_专业科目
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null" >
+        CODE = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category != null" >
+        CATEGORY = #{record.category,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectName != null" >
+        SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.info != null" >
+        INFO = #{record.info,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        VERSION = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.volumes != null" >
+        VOLUMES = #{record.volumes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.credits != null" >
+        CREDITS = #{record.credits,jdbcType=DOUBLE},
+      </if>
+      <if test="record.application != null" >
+        APPLICATION = #{record.application,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isRequest != null" >
+        IS_REQUEST = #{record.isRequest,jdbcType=BIT},
+      </if>
+      <if test="record.isPublic != null" >
+        IS_PUBLICE = #{record.isPublic,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_专业科目
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      CODE = #{record.code,jdbcType=VARCHAR},
+      CATEGORY = #{record.category,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      INFO = #{record.info,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=VARCHAR},
+      VOLUMES = #{record.volumes,jdbcType=VARCHAR},
+      CREDITS = #{record.credits,jdbcType=DOUBLE},
+      APPLICATION = #{record.application,jdbcType=VARCHAR},
+      IS_REQUEST = #{record.isRequest,jdbcType=BIT},
+      IS_PUBLICE = #{record.isPublic,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Subject" >
+    update sys_专业科目
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        CATEGORY = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        INFO = #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        VERSION = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="volumes != null" >
+        VOLUMES = #{volumes,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null" >
+        CREDITS = #{credits,jdbcType=DOUBLE},
+      </if>
+      <if test="application != null" >
+        APPLICATION = #{application,jdbcType=VARCHAR},
+      </if>
+      <if test="isRequest != null" >
+        IS_REQUEST = #{isRequest,jdbcType=BIT},
+      </if>
+      <if test="isPublic != null" >
+        IS_PUBLICE = #{isPublic,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Subject" >
+    update sys_专业科目
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CODE = #{code,jdbcType=VARCHAR},
+      CATEGORY = #{category,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      INFO = #{info,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=VARCHAR},
+      VOLUMES = #{volumes,jdbcType=VARCHAR},
+      CREDITS = #{credits,jdbcType=DOUBLE},
+      APPLICATION = #{application,jdbcType=VARCHAR},
+      IS_REQUEST = #{isRequest,jdbcType=BIT},
+      IS_PUBLICE = #{isPublic,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.StudentTestMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.StudentTest" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="TEST_RECORD_ID" property="testRecordId" jdbcType="VARCHAR" />
+    <result column="TEST_NAME" property="testName" jdbcType="VARCHAR" />
+    <result column="TEST_CODE" property="testCode" jdbcType="VARCHAR" />
+    <result column="TEST_LOCATION" property="testLocation" jdbcType="VARCHAR" />
+    <result column="TEST_NUMBER" property="testNum" jdbcType="VARCHAR" />
+    <result column="TEST_SCORE" property="testScore" jdbcType="DOUBLE" />
+    <result column="IS_PASS" property="isPass" jdbcType="BIT" />
+    <result column="IS_PAYMENT" property="isPayment" jdbcType="BIT" />
+    <result column="IS_REGIS_SUCCESS" property="isRegisSuccess" jdbcType="BIT" />
+    <result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, STATUS, TEST_RECORD_ID, TEST_NAME, TEST_CODE, TEST_LOCATION, TEST_NUMBER, TEST_SCORE, 
+    IS_PASS, IS_PAYMENT, IS_REGIS_SUCCESS, STUDENT_ID, REMARK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.StudentTestExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_学生考试
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_学生考试
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_学生考试
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.StudentTestExample" >
+    delete from sys_学生考试
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.StudentTest" >
+    insert into sys_学生考试 (ID, STATUS, TEST_RECORD_ID, 
+      TEST_NAME, TEST_CODE, TEST_LOCATION, 
+      TEST_NUMBER, TEST_SCORE, IS_PASS, 
+      IS_PAYMENT, IS_REGIS_SUCCESS, STUDENT_ID, 
+      REMARK)
+    values (#{id,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{testRecordId,jdbcType=VARCHAR}, 
+      #{testName,jdbcType=VARCHAR}, #{testCode,jdbcType=VARCHAR}, #{testLocation,jdbcType=VARCHAR}, 
+      #{testNum,jdbcType=VARCHAR}, #{testScore,jdbcType=DOUBLE}, #{isPass,jdbcType=BIT}, 
+      #{isPayment,jdbcType=BIT}, #{isRegisSuccess,jdbcType=BIT}, #{studentId,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.StudentTest" >
+    insert into sys_学生考试
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="testRecordId != null" >
+        TEST_RECORD_ID,
+      </if>
+      <if test="testName != null" >
+        TEST_NAME,
+      </if>
+      <if test="testCode != null" >
+        TEST_CODE,
+      </if>
+      <if test="testLocation != null" >
+        TEST_LOCATION,
+      </if>
+      <if test="testNum != null" >
+        TEST_NUMBER,
+      </if>
+      <if test="testScore != null" >
+        TEST_SCORE,
+      </if>
+      <if test="isPass != null" >
+        IS_PASS,
+      </if>
+      <if test="isPayment != null" >
+        IS_PAYMENT,
+      </if>
+      <if test="isRegisSuccess != null" >
+        IS_REGIS_SUCCESS,
+      </if>
+      <if test="studentId != null" >
+        STUDENT_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="testRecordId != null" >
+        #{testRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="testName != null" >
+        #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="testCode != null" >
+        #{testCode,jdbcType=VARCHAR},
+      </if>
+      <if test="testLocation != null" >
+        #{testLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="testNum != null" >
+        #{testNum,jdbcType=VARCHAR},
+      </if>
+      <if test="testScore != null" >
+        #{testScore,jdbcType=DOUBLE},
+      </if>
+      <if test="isPass != null" >
+        #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isPayment != null" >
+        #{isPayment,jdbcType=BIT},
+      </if>
+      <if test="isRegisSuccess != null" >
+        #{isRegisSuccess,jdbcType=BIT},
+      </if>
+      <if test="studentId != null" >
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.StudentTestExample" resultType="java.lang.Integer" >
+    select count(*) from sys_学生考试
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_学生考试
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.testRecordId != null" >
+        TEST_RECORD_ID = #{record.testRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testName != null" >
+        TEST_NAME = #{record.testName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testCode != null" >
+        TEST_CODE = #{record.testCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testLocation != null" >
+        TEST_LOCATION = #{record.testLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testNum != null" >
+        TEST_NUMBER = #{record.testNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testScore != null" >
+        TEST_SCORE = #{record.testScore,jdbcType=DOUBLE},
+      </if>
+      <if test="record.isPass != null" >
+        IS_PASS = #{record.isPass,jdbcType=BIT},
+      </if>
+      <if test="record.isPayment != null" >
+        IS_PAYMENT = #{record.isPayment,jdbcType=BIT},
+      </if>
+      <if test="record.isRegisSuccess != null" >
+        IS_REGIS_SUCCESS = #{record.isRegisSuccess,jdbcType=BIT},
+      </if>
+      <if test="record.studentId != null" >
+        STUDENT_ID = #{record.studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_学生考试
+    set ID = #{record.id,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      TEST_RECORD_ID = #{record.testRecordId,jdbcType=VARCHAR},
+      TEST_NAME = #{record.testName,jdbcType=VARCHAR},
+      TEST_CODE = #{record.testCode,jdbcType=VARCHAR},
+      TEST_LOCATION = #{record.testLocation,jdbcType=VARCHAR},
+      TEST_NUMBER = #{record.testNum,jdbcType=VARCHAR},
+      TEST_SCORE = #{record.testScore,jdbcType=DOUBLE},
+      IS_PASS = #{record.isPass,jdbcType=BIT},
+      IS_PAYMENT = #{record.isPayment,jdbcType=BIT},
+      IS_REGIS_SUCCESS = #{record.isRegisSuccess,jdbcType=BIT},
+      STUDENT_ID = #{record.studentId,jdbcType=VARCHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.StudentTest" >
+    update sys_学生考试
+    <set >
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="testRecordId != null" >
+        TEST_RECORD_ID = #{testRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="testName != null" >
+        TEST_NAME = #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="testCode != null" >
+        TEST_CODE = #{testCode,jdbcType=VARCHAR},
+      </if>
+      <if test="testLocation != null" >
+        TEST_LOCATION = #{testLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="testNum != null" >
+        TEST_NUMBER = #{testNum,jdbcType=VARCHAR},
+      </if>
+      <if test="testScore != null" >
+        TEST_SCORE = #{testScore,jdbcType=DOUBLE},
+      </if>
+      <if test="isPass != null" >
+        IS_PASS = #{isPass,jdbcType=BIT},
+      </if>
+      <if test="isPayment != null" >
+        IS_PAYMENT = #{isPayment,jdbcType=BIT},
+      </if>
+      <if test="isRegisSuccess != null" >
+        IS_REGIS_SUCCESS = #{isRegisSuccess,jdbcType=BIT},
+      </if>
+      <if test="studentId != null" >
+        STUDENT_ID = #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.StudentTest" >
+    update sys_学生考试
+    set STATUS = #{status,jdbcType=BIT},
+      TEST_RECORD_ID = #{testRecordId,jdbcType=VARCHAR},
+      TEST_NAME = #{testName,jdbcType=VARCHAR},
+      TEST_CODE = #{testCode,jdbcType=VARCHAR},
+      TEST_LOCATION = #{testLocation,jdbcType=VARCHAR},
+      TEST_NUMBER = #{testNum,jdbcType=VARCHAR},
+      TEST_SCORE = #{testScore,jdbcType=DOUBLE},
+      IS_PASS = #{isPass,jdbcType=BIT},
+      IS_PAYMENT = #{isPayment,jdbcType=BIT},
+      IS_REGIS_SUCCESS = #{isRegisSuccess,jdbcType=BIT},
+      STUDENT_ID = #{studentId,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

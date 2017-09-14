@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.ResultsStatisticalMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.ResultsStatistical" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="SCHOOL_YEAR" property="schoolYear" jdbcType="VARCHAR" />
+    <result column="TERM" property="term" jdbcType="INTEGER" />
+    <result column="REQUEST_CREDITS" property="requestCredits" jdbcType="DOUBLE" />
+    <result column="REQUEST_AVERAGE_POINT" property="requestAveragePoint" jdbcType="DOUBLE" />
+    <result column="TOTAL_CREADITS" property="totalCredits" jdbcType="DOUBLE" />
+    <result column="TOTAL_POINT" property="totalPoint" jdbcType="DOUBLE" />
+    <result column="AVERAGE_POINT" property="averagePoint" jdbcType="DOUBLE" />
+    <result column="STUDENT_NUM" property="studentNum" jdbcType="VARCHAR" />
+    <result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, SCHOOL_YEAR, 
+    TERM, REQUEST_CREDITS, REQUEST_AVERAGE_POINT, TOTAL_CREADITS, TOTAL_POINT, AVERAGE_POINT, 
+    STUDENT_NUM, STUDENT_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.ResultsStatisticalExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_成绩统计
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_成绩统计
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_成绩统计
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.ResultsStatisticalExample" >
+    delete from sys_成绩统计
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.ResultsStatistical" >
+    insert into sys_成绩统计 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, SCHOOL_YEAR, TERM, 
+      REQUEST_CREDITS, REQUEST_AVERAGE_POINT, TOTAL_CREADITS, 
+      TOTAL_POINT, AVERAGE_POINT, STUDENT_NUM, 
+      STUDENT_ID)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{schoolYear,jdbcType=VARCHAR}, #{term,jdbcType=INTEGER}, 
+      #{requestCredits,jdbcType=DOUBLE}, #{requestAveragePoint,jdbcType=DOUBLE}, #{totalCredits,jdbcType=DOUBLE}, 
+      #{totalPoint,jdbcType=DOUBLE}, #{averagePoint,jdbcType=DOUBLE}, #{studentNum,jdbcType=VARCHAR}, 
+      #{studentId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.ResultsStatistical" >
+    insert into sys_成绩统计
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR,
+      </if>
+      <if test="term != null" >
+        TERM,
+      </if>
+      <if test="requestCredits != null" >
+        REQUEST_CREDITS,
+      </if>
+      <if test="requestAveragePoint != null" >
+        REQUEST_AVERAGE_POINT,
+      </if>
+      <if test="totalCredits != null" >
+        TOTAL_CREADITS,
+      </if>
+      <if test="totalPoint != null" >
+        TOTAL_POINT,
+      </if>
+      <if test="averagePoint != null" >
+        AVERAGE_POINT,
+      </if>
+      <if test="studentNum != null" >
+        STUDENT_NUM,
+      </if>
+      <if test="studentId != null" >
+        STUDENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolYear != null" >
+        #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=INTEGER},
+      </if>
+      <if test="requestCredits != null" >
+        #{requestCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="requestAveragePoint != null" >
+        #{requestAveragePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="totalCredits != null" >
+        #{totalCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="totalPoint != null" >
+        #{totalPoint,jdbcType=DOUBLE},
+      </if>
+      <if test="averagePoint != null" >
+        #{averagePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="studentNum != null" >
+        #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.ResultsStatisticalExample" resultType="java.lang.Integer" >
+    select count(*) from sys_成绩统计
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_成绩统计
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolYear != null" >
+        SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.term != null" >
+        TERM = #{record.term,jdbcType=INTEGER},
+      </if>
+      <if test="record.requestCredits != null" >
+        REQUEST_CREDITS = #{record.requestCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="record.requestAveragePoint != null" >
+        REQUEST_AVERAGE_POINT = #{record.requestAveragePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="record.totalCredits != null" >
+        TOTAL_CREADITS = #{record.totalCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="record.totalPoint != null" >
+        TOTAL_POINT = #{record.totalPoint,jdbcType=DOUBLE},
+      </if>
+      <if test="record.averagePoint != null" >
+        AVERAGE_POINT = #{record.averagePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="record.studentNum != null" >
+        STUDENT_NUM = #{record.studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.studentId != null" >
+        STUDENT_ID = #{record.studentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_成绩统计
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      TERM = #{record.term,jdbcType=INTEGER},
+      REQUEST_CREDITS = #{record.requestCredits,jdbcType=DOUBLE},
+      REQUEST_AVERAGE_POINT = #{record.requestAveragePoint,jdbcType=DOUBLE},
+      TOTAL_CREADITS = #{record.totalCredits,jdbcType=DOUBLE},
+      TOTAL_POINT = #{record.totalPoint,jdbcType=DOUBLE},
+      AVERAGE_POINT = #{record.averagePoint,jdbcType=DOUBLE},
+      STUDENT_NUM = #{record.studentNum,jdbcType=VARCHAR},
+      STUDENT_ID = #{record.studentId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.ResultsStatistical" >
+    update sys_成绩统计
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        TERM = #{term,jdbcType=INTEGER},
+      </if>
+      <if test="requestCredits != null" >
+        REQUEST_CREDITS = #{requestCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="requestAveragePoint != null" >
+        REQUEST_AVERAGE_POINT = #{requestAveragePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="totalCredits != null" >
+        TOTAL_CREADITS = #{totalCredits,jdbcType=DOUBLE},
+      </if>
+      <if test="totalPoint != null" >
+        TOTAL_POINT = #{totalPoint,jdbcType=DOUBLE},
+      </if>
+      <if test="averagePoint != null" >
+        AVERAGE_POINT = #{averagePoint,jdbcType=DOUBLE},
+      </if>
+      <if test="studentNum != null" >
+        STUDENT_NUM = #{studentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null" >
+        STUDENT_ID = #{studentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.ResultsStatistical" >
+    update sys_成绩统计
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      TERM = #{term,jdbcType=INTEGER},
+      REQUEST_CREDITS = #{requestCredits,jdbcType=DOUBLE},
+      REQUEST_AVERAGE_POINT = #{requestAveragePoint,jdbcType=DOUBLE},
+      TOTAL_CREADITS = #{totalCredits,jdbcType=DOUBLE},
+      TOTAL_POINT = #{totalPoint,jdbcType=DOUBLE},
+      AVERAGE_POINT = #{averagePoint,jdbcType=DOUBLE},
+      STUDENT_NUM = #{studentNum,jdbcType=VARCHAR},
+      STUDENT_ID = #{studentId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

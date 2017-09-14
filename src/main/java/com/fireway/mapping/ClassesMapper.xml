@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.ClassesMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Classes" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+    <result column="NUMBER" property="number" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MAJOR" property="major" jdbcType="VARCHAR" />
+    <result column="ACADEMIC_DEGREE" property="academicDegree" jdbcType="VARCHAR" />
+    <result column="ACADEMIC_YEAR" property="academicYear" jdbcType="INTEGER" />
+    <result column="CAPACITY" property="capacity" jdbcType="INTEGER" />
+    <result column="HEAD" property="head" jdbcType="VARCHAR" />
+    <result column="HEAD_NUM" property="headNum" jdbcType="VARCHAR" />
+    <result column="HEAD_MOBILE" property="headMobile" jdbcType="VARCHAR" />
+    <result column="ACADEMY_ID" property="academyId" jdbcType="VARCHAR" />
+    <result column="ACADEMY_NAME" property="academyName" jdbcType="VARCHAR" />
+    <result column="SYLLABUS_ID" property="syllabusId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, GRADE, NUMBER, 
+    NAME, MAJOR, ACADEMIC_DEGREE, ACADEMIC_YEAR, CAPACITY, HEAD, HEAD_NUM, HEAD_MOBILE, ACADEMY_NAME,
+    ACADEMY_ID, SYLLABUS_ID
+  </sql>
+  
+  
+  
+  <select id="findByTeacher" resultMap="BaseResultMap">
+     select 
+    c.ID,c.NAME,c.ACADEMY_NAME,c.GRADE,c.NUMBER,
+    c.HEAD,c.HEAD_MOBILE,c.ACADEMIC_DEGREE,c.STATUS
+    from sys_班级信息 as c left join sys_课程排版 as k on(c.ID = k.CLASS_ID)
+    where k.T_NUMBER = #{teacherNum}
+  </select>
+  
+  
+  <select id="selectIdAndName" resultType="java.util.Map" parameterType="com.fireway.entity.ClassesExample" >
+    select
+    ID as value,NAME as name
+    from sys_班级信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.ClassesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_班级信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_班级信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_班级信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.ClassesExample" >
+    delete from sys_班级信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Classes" >
+    insert into sys_班级信息 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, GRADE, NUMBER, 
+      NAME, MAJOR, ACADEMIC_DEGREE, 
+      ACADEMIC_YEAR, CAPACITY, HEAD, 
+      HEAD_NUM, HEAD_MOBILE, ACADEMY_ID, ACADEMY_NAME,
+      SYLLABUS_ID)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{academicDegree,jdbcType=VARCHAR}, 
+      #{academicYear,jdbcType=INTEGER}, #{capacity,jdbcType=INTEGER}, #{head,jdbcType=VARCHAR}, 
+      #{headNum,jdbcType=VARCHAR}, #{headMobile,jdbcType=VARCHAR}, #{academyId,jdbcType=VARCHAR}, 
+      #{academyName,jdbcType=VARCHAR}, 
+      #{syllabusId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Classes" >
+    insert into sys_班级信息
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="grade != null" >
+        GRADE,
+      </if>
+      <if test="number != null" >
+        NUMBER,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="major != null" >
+        MAJOR,
+      </if>
+      <if test="academicDegree != null" >
+        ACADEMIC_DEGREE,
+      </if>
+      <if test="academicYear != null" >
+        ACADEMIC_YEAR,
+      </if>
+      <if test="capacity != null" >
+        CAPACITY,
+      </if>
+      <if test="head != null" >
+        HEAD,
+      </if>
+      <if test="headNum != null" >
+        HEAD_NUM,
+      </if>
+      <if test="headMobile != null" >
+        HEAD_MOBILE,
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME,
+      </if>
+      <if test="academyId != null" >
+        ACADEMY_ID,
+      </if>
+      <if test="syllabusId != null" >
+        SYLLABUS_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="academicDegree != null" >
+        #{academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="academicYear != null" >
+        #{academicYear,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="head != null" >
+        #{head,jdbcType=VARCHAR},
+      </if>
+      <if test="headNum != null" >
+        #{headNum,jdbcType=VARCHAR},
+      </if>
+      <if test="headMobile != null" >
+        #{headMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+       #{academyName,jdbcType=VARCHAR}, 
+      </if>
+      <if test="academyId != null" >
+        #{academyId,jdbcType=VARCHAR},
+      </if>
+      <if test="syllabusId != null" >
+        #{syllabusId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.ClassesExample" resultType="java.lang.Integer" >
+    select count(*) from sys_班级信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_班级信息
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grade != null" >
+        GRADE = #{record.grade,jdbcType=VARCHAR},
+      </if>
+      <if test="record.number != null" >
+        NUMBER = #{record.number,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.major != null" >
+        MAJOR = #{record.major,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academicDegree != null" >
+        ACADEMIC_DEGREE = #{record.academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academicYear != null" >
+        ACADEMIC_YEAR = #{record.academicYear,jdbcType=INTEGER},
+      </if>
+      <if test="record.capacity != null" >
+        CAPACITY = #{record.capacity,jdbcType=INTEGER},
+      </if>
+      <if test="record.head != null" >
+        HEAD = #{record.head,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headNum != null" >
+        HEAD_NUM = #{record.headNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headMobile != null" >
+        HEAD_MOBILE = #{record.headMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academyName != null" >
+        ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academyId != null" >
+        ACADEMY_ID = #{record.academyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.syllabusId != null" >
+        SYLLABUS_ID = #{record.syllabusId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_班级信息
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      GRADE = #{record.grade,jdbcType=VARCHAR},
+      NUMBER = #{record.number,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      MAJOR = #{record.major,jdbcType=VARCHAR},
+      ACADEMIC_DEGREE = #{record.academicDegree,jdbcType=VARCHAR},
+      ACADEMIC_YEAR = #{record.academicYear,jdbcType=INTEGER},
+      CAPACITY = #{record.capacity,jdbcType=INTEGER},
+      HEAD = #{record.head,jdbcType=VARCHAR},
+      HEAD_NUM = #{record.headNum,jdbcType=VARCHAR},
+      HEAD_MOBILE = #{record.headMobile,jdbcType=VARCHAR},
+      ACADEMY_ID = #{record.academyId,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{record.academyName,jdbcType=VARCHAR},
+      SYLLABUS_ID = #{record.syllabusId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Classes" >
+    update sys_班级信息
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        GRADE = #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        NUMBER = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        MAJOR = #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="academicDegree != null" >
+        ACADEMIC_DEGREE = #{academicDegree,jdbcType=VARCHAR},
+      </if>
+      <if test="academicYear != null" >
+        ACADEMIC_YEAR = #{academicYear,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        CAPACITY = #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="head != null" >
+        HEAD = #{head,jdbcType=VARCHAR},
+      </if>
+      <if test="headNum != null" >
+        HEAD_NUM = #{headNum,jdbcType=VARCHAR},
+      </if>
+      <if test="headMobile != null" >
+        HEAD_MOBILE = #{headMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="academyId != null" >
+        ACADEMY_ID = #{academyId,jdbcType=VARCHAR},
+      </if>
+      <if test="academyName != null" >
+        ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      </if>
+      <if test="syllabusId != null" >
+        SYLLABUS_ID = #{syllabusId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Classes" >
+    update sys_班级信息
+    set CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      GRADE = #{grade,jdbcType=VARCHAR},
+      NUMBER = #{number,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      MAJOR = #{major,jdbcType=VARCHAR},
+      ACADEMIC_DEGREE = #{academicDegree,jdbcType=VARCHAR},
+      ACADEMIC_YEAR = #{academicYear,jdbcType=INTEGER},
+      CAPACITY = #{capacity,jdbcType=INTEGER},
+      HEAD = #{head,jdbcType=VARCHAR},
+      HEAD_NUM = #{headNum,jdbcType=VARCHAR},
+      HEAD_MOBILE = #{headMobile,jdbcType=VARCHAR},
+      ACADEMY_NAME = #{academyName,jdbcType=VARCHAR},
+      ACADEMY_ID = #{academyId,jdbcType=VARCHAR},
+      SYLLABUS_ID = #{syllabusId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

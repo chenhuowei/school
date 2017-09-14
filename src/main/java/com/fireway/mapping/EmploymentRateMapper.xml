@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.EmploymentRateMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.EmploymentRate" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ACADEMY" property="academy" jdbcType="VARCHAR" />
+    <result column="EMPLOYMENT_RATE" property="employmentRate" jdbcType="DOUBLE" />
+    <result column="SCHOO_YEAR" property="schoolYear" jdbcType="VARCHAR" />
+    <result column="GRADUATION_YEAR" property="graduationYear" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, ACADEMY, EMPLOYMENT_RATE, SCHOO_YEAR, GRADUATION_YEAR
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.EmploymentRateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_毕业就业率
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  
+  
+  
+  <select id="statistics" resultType="java.util.Map" >
+    select 
+    ACADEMY as label,EMPLOYMENT_RATE as value
+    from sys_毕业就业率
+    where 1=1
+    <if test="graduationYear != null and graduationYear != ''">
+     and GRADUATION_YEAR = #{graduationYear,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  <select id="selectGraduationYear" resultType="java.util.Map" >
+    select 
+    distinct 
+    GRADUATION_YEAR as label
+    from sys_毕业就业率
+   	order by GRADUATION_YEAR asc
+  </select>
+  
+  <select id="selectRateByAcademy" resultType="java.util.Map" >
+    select 
+    EMPLOYMENT_RATE as value
+    from sys_毕业就业率
+   	where 1=1
+   	<if test="academy != null and academy != ''">
+   		and ACADEMY = #{academy}
+   	</if>
+   	order by GRADUATION_YEAR asc
+  </select>
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_毕业就业率
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_毕业就业率
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.EmploymentRateExample" >
+    delete from sys_毕业就业率
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.EmploymentRate" >
+    insert into sys_毕业就业率 (ID, ACADEMY, EMPLOYMENT_RATE, 
+      SCHOO_YEAR, GRADUATION_YEAR)
+    values (#{id,jdbcType=VARCHAR}, #{academy,jdbcType=VARCHAR}, #{employmentRate,jdbcType=DOUBLE}, 
+      #{schoolYear,jdbcType=VARCHAR}, #{graduationYear,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.EmploymentRate" >
+    insert into sys_毕业就业率
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="academy != null" >
+        ACADEMY,
+      </if>
+      <if test="employmentRate != null" >
+        EMPLOYMENT_RATE,
+      </if>
+      <if test="schoolYear != null" >
+        SCHOO_YEAR,
+      </if>
+      <if test="graduationYear != null" >
+        GRADUATION_YEAR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="academy != null" >
+        #{academy,jdbcType=VARCHAR},
+      </if>
+      <if test="employmentRate != null" >
+        #{employmentRate,jdbcType=DOUBLE},
+      </if>
+      <if test="schoolYear != null" >
+        #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="graduationYear != null" >
+        #{graduationYear,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.EmploymentRateExample" resultType="java.lang.Integer" >
+    select count(*) from sys_毕业就业率
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_毕业就业率
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.academy != null" >
+        ACADEMY = #{record.academy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employmentRate != null" >
+        EMPLOYMENT_RATE = #{record.employmentRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.schoolYear != null" >
+        SCHOO_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.graduationYear != null" >
+        GRADUATION_YEAR = #{record.graduationYear,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_毕业就业率
+    set ID = #{record.id,jdbcType=VARCHAR},
+      ACADEMY = #{record.academy,jdbcType=VARCHAR},
+      EMPLOYMENT_RATE = #{record.employmentRate,jdbcType=DOUBLE},
+      SCHOO_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      GRADUATION_YEAR = #{record.graduationYear,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.EmploymentRate" >
+    update sys_毕业就业率
+    <set >
+      <if test="academy != null" >
+        ACADEMY = #{academy,jdbcType=VARCHAR},
+      </if>
+      <if test="employmentRate != null" >
+        EMPLOYMENT_RATE = #{employmentRate,jdbcType=DOUBLE},
+      </if>
+      <if test="schoolYear != null" >
+        SCHOO_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="graduationYear != null" >
+        GRADUATION_YEAR = #{graduationYear,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.EmploymentRate" >
+    update sys_毕业就业率
+    set ACADEMY = #{academy,jdbcType=VARCHAR},
+      EMPLOYMENT_RATE = #{employmentRate,jdbcType=DOUBLE},
+      SCHOO_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      GRADUATION_YEAR = #{graduationYear,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

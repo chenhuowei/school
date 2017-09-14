@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.SubjectArrangementMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.SubjectArrangement" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SCHOOL_YEAR" property="schoolYear" jdbcType="VARCHAR" />
+    <result column="TERM" property="term" jdbcType="VARCHAR" />
+    <result column="SUBJECT_ID" property="subjectId" jdbcType="VARCHAR" />
+    <result column="SUBJECT_NAME" property="subjectName" jdbcType="VARCHAR" />
+    <result column="SUBJECT_CODE" property="subjectCode" jdbcType="VARCHAR" />
+    <result column="SUBJECT_VOLUMES" property="subjectVolumes" jdbcType="VARCHAR" />
+    <result column="TEACHER_NUM" property="teacherNum" jdbcType="VARCHAR" />
+    <result column="TEACHER_NAME" property="teacherName" jdbcType="VARCHAR" />
+    <result column="TEACHER_ID" property="teacherId" jdbcType="VARCHAR" />
+    <result column="WEEK_TIMES" property="weekTimes" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SCHOOL_YEAR, TERM, SUBJECT_ID, SUBJECT_NAME, SUBJECT_CODE, SUBJECT_VOLUMES, TEACHER_NUM, 
+    TEACHER_NAME, TEACHER_ID, WEEK_TIMES
+  </sql>
+  
+  
+  <select id="selectByClassId" resultType="java.util.Map" >
+   select sa.ID as value,sa.SUBJECT_NAME as name
+   from 
+   (sys_科目安排 as sa left join sys_班级_科目 as cs on sa.ID=cs.SUBJECT_ARRANGEMENT_ID) 
+   left join sys_班级信息 as c on cs.CLASS_ID = c.ID
+   where c.ID = #{classId} and sa.SCHOOL_YEAR = #{schoolYear} and sa.TERM = #{term}
+   <if test="null != teacherId and '' != teacherId">
+   		and sa.TEACHER_ID = #{teacherId}
+   </if>
+  </select>
+  
+  
+  
+  
+  <select id="selectByPage" resultMap="BaseResultMap" >
+   select sa.*,c.CLASS_NAME,c.ACADEMY_NAME,c.GRADE
+   from 
+   (sys_科目安排 as sa left join sys_班级_科目 as cs on sa.ID=cs.SUBJECT_ARRANGEMENT_ID) 
+   left join sys_班级信息 as c on cs.CLASS_ID = c.ID
+   where 1=1
+  </select>
+  
+  
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.SubjectArrangementExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_科目安排
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_科目安排
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_科目安排
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.SubjectArrangementExample" >
+    delete from sys_科目安排
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.SubjectArrangement" >
+    insert into sys_科目安排 (ID, SCHOOL_YEAR, TERM, 
+      SUBJECT_ID, SUBJECT_NAME, SUBJECT_CODE, 
+      SUBJECT_VOLUMES, TEACHER_NUM, TEACHER_NAME, 
+      TEACHER_ID, WEEK_TIMES)
+    values (#{id,jdbcType=VARCHAR}, #{schoolYear,jdbcType=VARCHAR}, #{term,jdbcType=VARCHAR}, 
+      #{subjectId,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, 
+      #{subjectVolumes,jdbcType=VARCHAR}, #{teacherNum,jdbcType=VARCHAR}, #{teacherName,jdbcType=VARCHAR}, 
+      #{teacherId,jdbcType=VARCHAR}, #{weekTimes,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.SubjectArrangement" >
+    insert into sys_科目安排
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR,
+      </if>
+      <if test="term != null" >
+        TERM,
+      </if>
+      <if test="subjectId != null" >
+        SUBJECT_ID,
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME,
+      </if>
+      <if test="subjectCode != null" >
+        SUBJECT_CODE,
+      </if>
+      <if test="subjectVolumes != null" >
+        SUBJECT_VOLUMES,
+      </if>
+      <if test="teacherNum != null" >
+        TEACHER_NUM,
+      </if>
+      <if test="teacherName != null" >
+        TEACHER_NAME,
+      </if>
+      <if test="teacherId != null" >
+        TEACHER_ID,
+      </if>
+      <if test="weekTimes != null" >
+        WEEK_TIMES,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolYear != null" >
+        #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null" >
+        #{subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null" >
+        #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectVolumes != null" >
+        #{subjectVolumes,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherName != null" >
+        #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="weekTimes != null" >
+        #{weekTimes,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.SubjectArrangementExample" resultType="java.lang.Integer" >
+    select count(*) from sys_科目安排
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_科目安排
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolYear != null" >
+        SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.term != null" >
+        TERM = #{record.term,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectId != null" >
+        SUBJECT_ID = #{record.subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectName != null" >
+        SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectCode != null" >
+        SUBJECT_CODE = #{record.subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectVolumes != null" >
+        SUBJECT_VOLUMES = #{record.subjectVolumes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherNum != null" >
+        TEACHER_NUM = #{record.teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherName != null" >
+        TEACHER_NAME = #{record.teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teacherId != null" >
+        TEACHER_ID = #{record.teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weekTimes != null" >
+        WEEK_TIMES = #{record.weekTimes,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_科目安排
+    set ID = #{record.id,jdbcType=VARCHAR},
+      SCHOOL_YEAR = #{record.schoolYear,jdbcType=VARCHAR},
+      TERM = #{record.term,jdbcType=VARCHAR},
+      SUBJECT_ID = #{record.subjectId,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{record.subjectName,jdbcType=VARCHAR},
+      SUBJECT_CODE = #{record.subjectCode,jdbcType=VARCHAR},
+      SUBJECT_VOLUMES = #{record.subjectVolumes,jdbcType=VARCHAR},
+      TEACHER_NUM = #{record.teacherNum,jdbcType=VARCHAR},
+      TEACHER_NAME = #{record.teacherName,jdbcType=VARCHAR},
+      TEACHER_ID = #{record.teacherId,jdbcType=VARCHAR},
+      WEEK_TIMES = #{record.weekTimes,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.SubjectArrangement" >
+    update sys_科目安排
+    <set >
+      <if test="schoolYear != null" >
+        SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      </if>
+      <if test="term != null" >
+        TERM = #{term,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null" >
+        SUBJECT_ID = #{subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null" >
+        SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null" >
+        SUBJECT_CODE = #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectVolumes != null" >
+        SUBJECT_VOLUMES = #{subjectVolumes,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherNum != null" >
+        TEACHER_NUM = #{teacherNum,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherName != null" >
+        TEACHER_NAME = #{teacherName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherId != null" >
+        TEACHER_ID = #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="weekTimes != null" >
+        WEEK_TIMES = #{weekTimes,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.SubjectArrangement" >
+    update sys_科目安排
+    set SCHOOL_YEAR = #{schoolYear,jdbcType=VARCHAR},
+      TERM = #{term,jdbcType=VARCHAR},
+      SUBJECT_ID = #{subjectId,jdbcType=VARCHAR},
+      SUBJECT_NAME = #{subjectName,jdbcType=VARCHAR},
+      SUBJECT_CODE = #{subjectCode,jdbcType=VARCHAR},
+      SUBJECT_VOLUMES = #{subjectVolumes,jdbcType=VARCHAR},
+      TEACHER_NUM = #{teacherNum,jdbcType=VARCHAR},
+      TEACHER_NAME = #{teacherName,jdbcType=VARCHAR},
+      TEACHER_ID = #{teacherId,jdbcType=VARCHAR},
+      WEEK_TIMES = #{weekTimes,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.ChatRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.ChatRecord" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FROM_USER_ID" property="fromeUserId" jdbcType="VARCHAR" />
+    <result column="FROM_USER_NAME" property="fromeUserName" jdbcType="VARCHAR" />
+    <result column="TO_USER_ID" property="toUserId" jdbcType="VARCHAR" />
+    <result column="MESSAGE" property="message" jdbcType="VARCHAR" />
+    <result column="SEND_TIME" property="sendTime" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+  </resultMap>
+  
+ 
+  <sql id="Base_Column_List" >
+    ID, FROM_USER_ID.FROM_USER_NAME,TO_USER_ID,MESSAGE,SEND_TIME,STAUS
+  </sql>
+  
+  <select id="findAll">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from sys_会话记录
+  </select>
+  
+  <select id="findByFromUserId">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from sys_会话记录
+  	where FROM_USER_ID = #{fromUserId}
+  </select>
+  
+  <select id="findByToUserId">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from sys_会话记录
+  	where TO_USER_ID = #{toUserId}
+  </select>
+  
+  <select id="findByGroupChat">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from sys_会话记录
+  	where TO_USER_ID is null
+  </select>
+  
+  <insert id="save" parameterType="com.fireway.entity.ChatRecord">
+  	insert into sys_会话记录 (ID,FROM_USER_ID,FROM_USER_NAME,TO_USER_ID,MESSAGE,SEND_TIME,STATUS)
+  		values(#{id,jdbcType=VARCHAR},#{fromUserId,jdbcType=VARCHAR},#{fromUserName,jdbcType=VARCHAR},
+  			#{toUserId,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR},#{sendTime,jdbcType=VARCHAR},
+  			#{status,jdbcType=BIT}
+  		)
+  </insert>
+  
+  
+  
+ 
+</mapper>

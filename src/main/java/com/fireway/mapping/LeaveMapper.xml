@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fireway.dao.LeaveMapper" >
+  <resultMap id="BaseResultMap" type="com.fireway.entity.Leave" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR_ID" property="operatorNum" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="BIT" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="APPLICANT_TIME" property="applicantTime" jdbcType="TIMESTAMP" />
+    <result column="APPLICANT" property="applicant" jdbcType="VARCHAR" />
+    <result column="APPLICANT_NUM" property="applicantNum" jdbcType="VARCHAR" />
+    <result column="RESON" property="reson" jdbcType="VARCHAR" />
+    <result column="REQUEST_TIME" property="requestTime" jdbcType="TIMESTAMP" />
+    <result column="APPROVER" property="approver" jdbcType="VARCHAR" />
+    <result column="APPROVER_NUM" property="approverNum" jdbcType="VARCHAR" />
+    <result column="APPROVAL_TIME" property="approvalTime" jdbcType="TIMESTAMP" />
+    <result column="LEADER_OPINION" property="leaderOpinion" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="IS_CHECK_OK" property="isCheckOk" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CREATE_TIME, UPDATE_TIME, OPERATOR_ID, OPERATOR, STATUS, REMARK, APPLICANT_TIME, 
+    APPLICANT, APPLICANT_NUM, RESON, REQUEST_TIME, APPROVER, APPROVER_NUM, APPROVAL_TIME, 
+    LEADER_OPINION, START_TIME, END_TIME, IS_CHECK_OK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fireway.entity.LeaveExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_请假信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      <if test="offset != null" >
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null" >
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_请假信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_请假信息
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fireway.entity.LeaveExample" >
+    delete from sys_请假信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fireway.entity.Leave" >
+    insert into sys_请假信息 (ID, CREATE_TIME, UPDATE_TIME, 
+      OPERATOR_ID, OPERATOR, STATUS, 
+      REMARK, APPLICANT_TIME, APPLICANT, 
+      APPLICANT_NUM, RESON, REQUEST_TIME, 
+      APPROVER, APPROVER_NUM, APPROVAL_TIME, 
+      LEADER_OPINION, START_TIME, END_TIME, 
+      IS_CHECK_OK)
+    values (#{id,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{operatorNum,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, 
+      #{remark,jdbcType=VARCHAR}, #{applicantTime,jdbcType=TIMESTAMP}, #{applicant,jdbcType=VARCHAR}, 
+      #{applicantNum,jdbcType=VARCHAR}, #{reson,jdbcType=VARCHAR}, #{requestTime,jdbcType=TIMESTAMP}, 
+      #{approver,jdbcType=VARCHAR}, #{approverNum,jdbcType=VARCHAR}, #{approvalTime,jdbcType=TIMESTAMP}, 
+      #{leaderOpinion,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{isCheckOk,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fireway.entity.Leave" >
+    insert into sys_请假信息
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID,
+      </if>
+      <if test="operator != null" >
+        OPERATOR,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="applicantTime != null" >
+        APPLICANT_TIME,
+      </if>
+      <if test="applicant != null" >
+        APPLICANT,
+      </if>
+      <if test="applicantNum != null" >
+        APPLICANT_NUM,
+      </if>
+      <if test="reson != null" >
+        RESON,
+      </if>
+      <if test="requestTime != null" >
+        REQUEST_TIME,
+      </if>
+      <if test="approver != null" >
+        APPROVER,
+      </if>
+      <if test="approverNum != null" >
+        APPROVER_NUM,
+      </if>
+      <if test="approvalTime != null" >
+        APPROVAL_TIME,
+      </if>
+      <if test="leaderOpinion != null" >
+        LEADER_OPINION,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="isCheckOk != null" >
+        IS_CHECK_OK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorNum != null" >
+        #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantTime != null" >
+        #{applicantTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicant != null" >
+        #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantNum != null" >
+        #{applicantNum,jdbcType=VARCHAR},
+      </if>
+      <if test="reson != null" >
+        #{reson,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approver != null" >
+        #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverNum != null" >
+        #{approverNum,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalTime != null" >
+        #{approvalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaderOpinion != null" >
+        #{leaderOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheckOk != null" >
+        #{isCheckOk,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fireway.entity.LeaveExample" resultType="java.lang.Integer" >
+    select count(*) from sys_请假信息
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_请假信息
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.operatorNum != null" >
+        OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null" >
+        OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        STATUS = #{record.status,jdbcType=BIT},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applicantTime != null" >
+        APPLICANT_TIME = #{record.applicantTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.applicant != null" >
+        APPLICANT = #{record.applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applicantNum != null" >
+        APPLICANT_NUM = #{record.applicantNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reson != null" >
+        RESON = #{record.reson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestTime != null" >
+        REQUEST_TIME = #{record.requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.approver != null" >
+        APPROVER = #{record.approver,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approverNum != null" >
+        APPROVER_NUM = #{record.approverNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.approvalTime != null" >
+        APPROVAL_TIME = #{record.approvalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.leaderOpinion != null" >
+        LEADER_OPINION = #{record.leaderOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null" >
+        START_TIME = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null" >
+        END_TIME = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isCheckOk != null" >
+        IS_CHECK_OK = #{record.isCheckOk,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_请假信息
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      OPERATOR_ID = #{record.operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{record.operator,jdbcType=VARCHAR},
+      STATUS = #{record.status,jdbcType=BIT},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      APPLICANT_TIME = #{record.applicantTime,jdbcType=TIMESTAMP},
+      APPLICANT = #{record.applicant,jdbcType=VARCHAR},
+      APPLICANT_NUM = #{record.applicantNum,jdbcType=VARCHAR},
+      RESON = #{record.reson,jdbcType=VARCHAR},
+      REQUEST_TIME = #{record.requestTime,jdbcType=TIMESTAMP},
+      APPROVER = #{record.approver,jdbcType=VARCHAR},
+      APPROVER_NUM = #{record.approverNum,jdbcType=VARCHAR},
+      APPROVAL_TIME = #{record.approvalTime,jdbcType=TIMESTAMP},
+      LEADER_OPINION = #{record.leaderOpinion,jdbcType=VARCHAR},
+      START_TIME = #{record.startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{record.endTime,jdbcType=TIMESTAMP},
+      IS_CHECK_OK = #{record.isCheckOk,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fireway.entity.Leave" >
+    update sys_请假信息
+    <set >
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorNum != null" >
+        OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=BIT},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantTime != null" >
+        APPLICANT_TIME = #{applicantTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicant != null" >
+        APPLICANT = #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantNum != null" >
+        APPLICANT_NUM = #{applicantNum,jdbcType=VARCHAR},
+      </if>
+      <if test="reson != null" >
+        RESON = #{reson,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null" >
+        REQUEST_TIME = #{requestTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approver != null" >
+        APPROVER = #{approver,jdbcType=VARCHAR},
+      </if>
+      <if test="approverNum != null" >
+        APPROVER_NUM = #{approverNum,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalTime != null" >
+        APPROVAL_TIME = #{approvalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaderOpinion != null" >
+        LEADER_OPINION = #{leaderOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheckOk != null" >
+        IS_CHECK_OK = #{isCheckOk,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fireway.entity.Leave" >
+    update sys_请假信息
+    set CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      OPERATOR_ID = #{operatorNum,jdbcType=VARCHAR},
+      OPERATOR = #{operator,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=BIT},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      APPLICANT_TIME = #{applicantTime,jdbcType=TIMESTAMP},
+      APPLICANT = #{applicant,jdbcType=VARCHAR},
+      APPLICANT_NUM = #{applicantNum,jdbcType=VARCHAR},
+      RESON = #{reson,jdbcType=VARCHAR},
+      REQUEST_TIME = #{requestTime,jdbcType=TIMESTAMP},
+      APPROVER = #{approver,jdbcType=VARCHAR},
+      APPROVER_NUM = #{approverNum,jdbcType=VARCHAR},
+      APPROVAL_TIME = #{approvalTime,jdbcType=TIMESTAMP},
+      LEADER_OPINION = #{leaderOpinion,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      IS_CHECK_OK = #{isCheckOk,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
